@@ -9,11 +9,14 @@ class Category extends Model
 {
     use HasFactory;
 
-    //definimos los parametros que se expondran
-    protected $fillable = ['title', 'slug'];
+    //cuando no creamos los campos de timestamps devemos indicar que son falsos
+    public $timestamps = false;
 
-    function posts(){
-        return $this->hasMany(Post::class);
+    //definimos los parametros que se expondran
+    protected $fillable = ['id', 'title', 'slug'];
+
+    function categories(){
+        return $this->hasMany(Category::class);
     }
 
 }
