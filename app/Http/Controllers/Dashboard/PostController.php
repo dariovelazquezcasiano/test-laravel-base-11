@@ -27,7 +27,7 @@ class PostController extends Controller
 
         //psamos la vista con los datos
         return view('dashboard.post.index', compact('posts'));
-        
+
         // dd($post);
 
         // Post::create(
@@ -41,7 +41,7 @@ class PostController extends Controller
         //         'image' => 'test imagen',
         //     ]
         // );
-         
+
     }
 
     //muestra el formulario para crear un nuevo registro(pasa catalagos de relaciones foraneas)
@@ -54,21 +54,20 @@ class PostController extends Controller
 
     //recibe el formulario para la insercionde nuevos registros he inserta el registro en la db
     public function store(StoreRequest $request)
-    {   
+    {
         //imagen
         $data = $request->validated();
 
-    //     $image = $request->file('image');
-    //     $path = $image->getClientOriginalName();
-    //    dd($data['image']->getClientOriginalName());
+        //     $image = $request->file('image');
+        //     $path = $image->getClientOriginalName();
+        //    dd($data['image']->getClientOriginalName());
 
         if (isset($data['image'])) {
             //$data['image'] = $fileName = time().'.'.$data['image']->extension();
             $data['image'] = $fileName = $data['image']->getClientOriginalName();
-            
-            //movemos la imagen al servidor(a la ruta que queremos)
-            $request->image->move(public_path('uploads/posts'),$fileName);
 
+            //movemos la imagen al servidor(a la ruta que queremos)
+            $request->image->move(public_path('uploads/posts'), $fileName);
         }
 
         //creamos el registro con todos los datos
@@ -76,7 +75,7 @@ class PostController extends Controller
         //Post::create($request->validated());
 
         //redirigimos despues de insertar
-        return to_route('post.index');
+        return to_route('post.index')->with('status', 'Post Creado');
 
 
         //validamos los datos con validator este no da la redireccion automatica a back si ay errores
@@ -115,7 +114,7 @@ class PostController extends Controller
         //         // 'image' => $request->all()['image'],
         //     ]
         // );
-        
+
         //dd($request->get('title'));    
     }
 
@@ -123,7 +122,7 @@ class PostController extends Controller
      * Display the specified resource.
      */
     public function show(Post $post)
-    {  
+    {
         return view('dashboard.post.show', ['post' => $post]);
     }
 
@@ -143,15 +142,29 @@ class PostController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateRequest $request, Post $post)
-    {   
-       // dd(public_path('upload/posts'));
+    {
+        //imagen
+        $data = $request->validated();
+
+        //     $image = $request->file('image');
+        //     $path = $image->getClientOriginalName();
+        //    dd($data['image']->getClientOriginalName());
+
+        if (isset($data['image'])) {
+            //$data['image'] = $fileName = time().'.'.$data['image']->extension();
+            $data['image'] = $fileName = $data['image']->getClientOriginalName();
+
+            //movemos la imagen al servidor(a la ruta que queremos)
+            $request->image->move(public_path('uploads/posts'), $fileName);
+        }
+
+        // dd(public_path('upload/posts'));
 
         //actualizamos el regidtro con todos los datos
-        $post->update($request->validated());
+        $post->update($data);
 
         //redirigimos a la vista deceada
-        return to_route('post.index');
-
+        return to_route('post.index')->with('status', 'Post editado');
     }
 
     /**
@@ -163,7 +176,6 @@ class PostController extends Controller
         $post->delete();
 
         //rederigimos a la pagina deceada
-        return to_route('post.index');
-
+        return to_route('post.index')->with('status', 'Post eliminado');
     }
 }
