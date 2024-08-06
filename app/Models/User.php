@@ -32,6 +32,18 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function isRoot():bool {
+        return $this->rol === '1';
+    }
+
+    public function isAdmin():bool {
+        return $this->rol === '2';
+    }
+    
+    public function isCliente():bool {
+        return $this->rol === '3';
+    }
+
     /**
      * Get the attributes that should be cast.
      *
